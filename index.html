@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Secretarias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-8">
+                    <span class="text-xl font-bold tracking-tight text-indigo-600">SISTEMA<span>
+                    
+                    <div class="hidden md:flex space-x-4">
+                        <button onclick="openTab('home')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Início</button>
+                        <button onclick="openTab('saude')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Saúde</button>
+                        <button onclick="openTab('meioambiente')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Meio Ambiente</button>
+                        <button onclick="openTab('financeiro')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Financeiro</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="text-sm text-slate-500 font-medium">Sair</button>
+                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold text-xs">
+                        B
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6">
+        
+        <div id="home" class="tab-content active animate-fade-in">
+            <h1 class="text-2xl font-semibold mb-2">Bem-vindo ao Painel Central</h1>
+            <p class="text-slate-500">Selecione uma secretaria no menu acima para gerenciar os dados.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold">Resumo Geral</h3>
+                    <p class="text-3xl mt-2 font-light text-indigo-600">124</p>
+                    <p class="text-xs text-slate-400">Processos ativos hoje</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="saude" class="tab-content animate-fade-in">
+            <h1 class="text-2xl font-semibold text-blue-600">Secretaria da Saúde</h1>
+            <div class="mt-6 bg-white p-10 rounded-2xl border-dashed border-2 border-slate-200 text-center">
+                <p class="text-slate-400">Área de gestão de prontuários e agendamentos.</p>
+            </div>
+        </div>
+
+        </main>
+
+    <script>
+        function openTab(tabName) {
+            // Esconde todos os conteúdos
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Mostra o selecionado
+            document.getElementById(tabName).classList.add('active');
+        }
+    </script>
+</body>
+</html>
