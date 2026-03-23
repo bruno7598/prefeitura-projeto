@@ -10,64 +10,106 @@
         body { font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        #app-interface { display: none; } /* Escondido até logar */
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
+    <div id="login-screen" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold text-indigo-600 mb-6">Acesso ao Sistema</h1>
+            <p class="text-slate-500 mb-8">Utilize sua conta institucional para entrar.</p>
+            <button id="btn-google" class="w-full flex items-center justify-center gap-3 bg-white border border-slate-300 py-3 px-4 rounded-lg font-medium hover:bg-slate-50 transition">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+
+    <div id="app-interface">
+        <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
                 <div class="flex items-center gap-8">
                     <span class="text-xl font-bold tracking-tight text-indigo-600">SISTEMA<span>
-                    
                     <div class="hidden md:flex space-x-4">
-                        <button onclick="openTab('home')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Início</button>
-                        <button onclick="openTab('saude')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Saúde</button>
-                        <button onclick="openTab('meioambiente')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Meio Ambiente</button>
-                        <button onclick="openTab('financeiro')" class="px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Financeiro</button>
+                        <button onclick="openTab('home')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Início</button>
+                        <button onclick="openTab('saude')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Saúde</button>
+                        <button onclick="openTab('meioambiente')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Meio Ambiente</button>
+                        <button onclick="openTab('financeiro')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Financeiro</button>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-4">
-                    <button class="text-sm text-slate-500 font-medium">Sair</button>
-                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold text-xs">
-                        B
-                    </div>
+                    <span id="user-name" class="text-sm font-medium text-slate-600"></span>
+                    <button id="btn-logout" class="text-sm text-red-500 font-medium">Sair</button>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <main class="max-w-7xl mx-auto p-6">
-        
-        <div id="home" class="tab-content active animate-fade-in">
-            <h1 class="text-2xl font-semibold mb-2">Bem-vindo ao Painel Central</h1>
-            <p class="text-slate-500">Selecione uma secretaria no menu acima para gerenciar os dados.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold">Resumo Geral</h3>
-                    <p class="text-3xl mt-2 font-light text-indigo-600">124</p>
-                    <p class="text-xs text-slate-400">Processos ativos hoje</p>
-                </div>
+        <main class="max-w-7xl mx-auto p-6">
+            <div id="home" class="tab-content active">
+                <h1 class="text-2xl font-semibold">Painel Geral</h1>
+                <p class="text-slate-500">Bem-vindo ao sistema centralizado de secretarias.</p>
             </div>
-        </div>
-
-        <div id="saude" class="tab-content animate-fade-in">
-            <h1 class="text-2xl font-semibold text-blue-600">Secretaria da Saúde</h1>
-            <div class="mt-6 bg-white p-10 rounded-2xl border-dashed border-2 border-slate-200 text-center">
-                <p class="text-slate-400">Área de gestão de prontuários e agendamentos.</p>
+            <div id="saude" class="tab-content">
+                <h1 class="text-2xl font-semibold text-blue-600">Secretaria da Saúde</h1>
             </div>
-        </div>
-
+            <div id="meioambiente" class="tab-content">
+                <h1 class="text-2xl font-semibold text-green-600">Secretaria do Meio Ambiente</h1>
+            </div>
+            <div id="financeiro" class="tab-content">
+                <h1 class="text-2xl font-semibold text-amber-600">Secretaria Financeira</h1>
+            </div>
         </main>
+    </div>
 
-    <script>
-        function openTab(tabName) {
-            // Esconde todos os conteúdos
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApwERrLWyi7mWMxcqR_HQr_HJtup-engY",
+            authDomain: "prefeitura-proj.firebaseapp.com",
+            projectId: "prefeitura-proj",
+            storageBucket: "prefeitura-proj.firebasestorage.app",
+            messagingSenderId: "461365295386",
+            appId: "1:461365295386:web:3de63aeb6bffab801fd4a3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Elementos da Interface
+        const loginScreen = document.getElementById('login-screen');
+        const appInterface = document.getElementById('app-interface');
+        const userNameSpan = document.getElementById('user-name');
+
+        // Função de Login
+        document.getElementById('btn-google').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(error => alert("Erro ao logar: " + error.message));
+        });
+
+        // Função de Logout
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Observador de Estado (Verifica se está logado ou não)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginScreen.style.display = 'none';
+                appInterface.style.display = 'block';
+                userNameSpan.innerText = user.displayName;
+            } else {
+                loginScreen.style.display = 'flex';
+                appInterface.style.display = 'none';
+            }
+        });
+
+        // Tornar a função de trocar abas global para o HTML
+        window.openTab = function(tabName) {
             const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            // Mostra o selecionado
+            contents.forEach(c => c.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
         }
     </script>
