@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestão - Secretarias</title>
+    <title>Gestão Online - Secretarias</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        #app-interface { display: none; } /* Escondido até logar */
+        #app-interface { display: none; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-100 text-slate-800">
 
-    <div id="login-screen" class="min-h-screen flex items-center justify-center">
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-slate-50">
         <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 w-full max-w-md text-center">
-            <h1 class="text-2xl font-bold text-indigo-600 mb-6">Acesso ao Sistema</h1>
-            <p class="text-slate-500 mb-8">Utilize sua conta institucional para entrar.</p>
+            <h1 class="text-2xl font-bold text-indigo-600 mb-2">GESTÃO ONLINE</h1>
+            <p class="text-slate-500 mb-8">Acesse o painel administrativo</p>
             <button id="btn-google" class="w-full flex items-center justify-center gap-3 bg-white border border-slate-300 py-3 px-4 rounded-lg font-medium hover:bg-slate-50 transition">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
                 Entrar com Google
@@ -26,40 +26,93 @@
         </div>
     </div>
 
-    <div id="app-interface">
-        <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-                <div class="flex items-center gap-8">
-                    <span class="text-xl font-bold tracking-tight text-indigo-600">SISTEMA<span>
-                    <div class="hidden md:flex space-x-4">
-                        <button onclick="openTab('home')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Início</button>
-                        <button onclick="openTab('saude')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Saúde</button>
-                        <button onclick="openTab('meioambiente')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Meio Ambiente</button>
-                        <button onclick="openTab('financeiro')" class="nav-link px-3 py-2 text-sm font-medium hover:text-indigo-600 transition">Financeiro</button>
-                    </div>
+    <div id="app-interface" class="flex h-screen overflow-hidden">
+        
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl">
+            <div class="p-6 border-b border-slate-800">
+                <h2 class="text-white font-bold text-lg tracking-wider uppercase">Gestão Online</h2>
+            </div>
+            <nav class="flex-1 mt-4 px-4 space-y-1">
+                <button onclick="openTab('home')" class="w-full flex items-center gap-3 p-3 hover:bg-slate-800 hover:text-white rounded-lg transition group">
+                    <span class="opacity-70 group-hover:opacity-100">📊</span> Painel Principal
+                </button>
+                <button onclick="openTab('saude')" class="w-full flex items-center gap-3 p-3 hover:bg-slate-800 hover:text-white rounded-lg transition group">
+                    <span class="opacity-70 group-hover:opacity-100">🏥</span> Saúde
+                </button>
+                <button onclick="openTab('meioambiente')" class="w-full flex items-center gap-3 p-3 hover:bg-slate-800 hover:text-white rounded-lg transition group">
+                    <span class="opacity-70 group-hover:opacity-100">🌿</span> Meio Ambiente
+                </button>
+                <button onclick="openTab('financeiro')" class="w-full flex items-center gap-3 p-3 hover:bg-slate-800 hover:text-white rounded-lg transition group">
+                    <span class="opacity-70 group-hover:opacity-100">💰</span> Financeiro
+                </button>
+            </nav>
+            <div class="p-4 border-t border-slate-800">
+                <button id="btn-logout" class="w-full text-left p-2 text-sm text-red-400 hover:text-red-300 transition">
+                    ✕ Sair do Sistema
+                </button>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col bg-slate-50 overflow-y-auto">
+            
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+                <div class="flex items-center gap-2">
+                    <span class="text-slate-400">Páginas /</span>
+                    <span id="current-page-title" class="font-medium text-slate-700">Painel</span>
                 </div>
                 <div class="flex items-center gap-4">
-                    <span id="user-name" class="text-sm font-medium text-slate-600"></span>
-                    <button id="btn-logout" class="text-sm text-red-500 font-medium">Sair</button>
+                    <div class="text-right">
+                        <p id="user-name" class="text-sm font-bold text-slate-700 leading-none"></p>
+                        <p class="text-xs text-slate-400">Administrador</p>
+                    </div>
+                    <div class="w-10 h-10 bg-indigo-100 border border-indigo-200 rounded-full flex items-center justify-center text-indigo-700 font-bold">
+                        U
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </header>
 
-        <main class="max-w-7xl mx-auto p-6">
-            <div id="home" class="tab-content active">
-                <h1 class="text-2xl font-semibold">Painel Geral</h1>
-                <p class="text-slate-500">Bem-vindo ao sistema centralizado de secretarias.</p>
-            </div>
-            <div id="saude" class="tab-content">
-                <h1 class="text-2xl font-semibold text-blue-600">Secretaria da Saúde</h1>
-            </div>
-            <div id="meioambiente" class="tab-content">
-                <h1 class="text-2xl font-semibold text-green-600">Secretaria do Meio Ambiente</h1>
-            </div>
-            <div id="financeiro" class="tab-content">
-                <h1 class="text-2xl font-semibold text-amber-600">Secretaria Financeira</h1>
-            </div>
-        </main>
+            <main class="p-8">
+                
+                <div id="home" class="tab-content active animate-in fade-in duration-500">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Atendimentos</p>
+                            <p class="text-2xl font-bold text-slate-800">1.021</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Processos</p>
+                            <p class="text-2xl font-bold text-slate-800">18.506</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Aprovações</p>
+                            <p class="text-2xl font-bold text-slate-800">350</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pendências</p>
+                            <p class="text-2xl font-bold text-slate-800">1.050</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 h-64 flex items-center justify-center">
+                        <p class="text-slate-400 italic">Gráfico de desempenho geral (vazio)</p>
+                    </div>
+                </div>
+
+                <div id="saude" class="tab-content">
+                    <h1 class="text-2xl font-bold text-blue-600">Secretaria da Saúde</h1>
+                    <p class="text-slate-500">Gestão de unidades e prontuários.</p>
+                </div>
+                <div id="meioambiente" class="tab-content">
+                    <h1 class="text-2xl font-bold text-green-600">Secretaria do Meio Ambiente</h1>
+                    <p class="text-slate-500">Licenciamentos e fiscalização ambiental.</p>
+                </div>
+                <div id="financeiro" class="tab-content">
+                    <h1 class="text-2xl font-bold text-amber-600">Secretaria Financeira</h1>
+                    <p class="text-slate-500">Controle de receitas e despesas municipais.</p>
+                </div>
+
+            </main>
+        </div>
     </div>
 
     <script type="module">
@@ -79,26 +132,22 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Elementos da Interface
         const loginScreen = document.getElementById('login-screen');
         const appInterface = document.getElementById('app-interface');
         const userNameSpan = document.getElementById('user-name');
 
-        // Função de Login
         document.getElementById('btn-google').addEventListener('click', () => {
             signInWithPopup(auth, provider).catch(error => alert("Erro ao logar: " + error.message));
         });
 
-        // Função de Logout
         document.getElementById('btn-logout').addEventListener('click', () => {
             signOut(auth);
         });
 
-        // Observador de Estado (Verifica se está logado ou não)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginScreen.style.display = 'none';
-                appInterface.style.display = 'block';
+                appInterface.style.display = 'flex';
                 userNameSpan.innerText = user.displayName;
             } else {
                 loginScreen.style.display = 'flex';
@@ -106,11 +155,14 @@
             }
         });
 
-        // Tornar a função de trocar abas global para o HTML
         window.openTab = function(tabName) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
+            
+            // Atualiza o título no topo
+            const titles = { 'home': 'Painel', 'saude': 'Saúde', 'meioambiente': 'Meio Ambiente', 'financeiro': 'Financeiro' };
+            document.getElementById('current-page-title').innerText = titles[tabName];
         }
     </script>
 </body>
